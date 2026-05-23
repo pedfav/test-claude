@@ -11,11 +11,13 @@
       </nav>
 
       <div class="header-right">
-        <div class="user-menu" v-if="authStore.user">
-          <div class="avatar" :title="authStore.user.displayName">
-            {{ authStore.user.displayName.charAt(0).toUpperCase() }}
-          </div>
-          <span class="user-name">{{ authStore.user.displayName }}</span>
+        <div class="user-menu" v-if="authStore.isAuthenticated">
+          <template v-if="authStore.user">
+            <div class="avatar" :title="authStore.user.displayName">
+              {{ authStore.user.displayName.charAt(0).toUpperCase() }}
+            </div>
+            <span class="user-name">{{ authStore.user.displayName }}</span>
+          </template>
           <button class="btn btn-ghost btn-sm" @click="handleLogout">Sign out</button>
         </div>
       </div>
