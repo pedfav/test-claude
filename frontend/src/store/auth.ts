@@ -5,7 +5,8 @@ import type { User } from '@/api/types'
 
 export const useAuthStore = defineStore('auth', () => {
   const token = ref<string | null>(localStorage.getItem('token'))
-  const user = ref<User | null>(null)
+  const storedUser = localStorage.getItem('user')
+  const user = ref<User | null>(storedUser ? JSON.parse(storedUser) : null)
 
   const isAuthenticated = computed(() => !!token.value)
 
@@ -13,12 +14,14 @@ export const useAuthStore = defineStore('auth', () => {
     token.value = newToken
     user.value = newUser
     localStorage.setItem('token', newToken)
+    localStorage.setItem('user', JSON.stringify(newUser))
   }
 
   function clearAuth() {
     token.value = null
     user.value = null
     localStorage.removeItem('token')
+    localStorage.removeItem('user')
   }
 
   async function login(email: string, password: string) {

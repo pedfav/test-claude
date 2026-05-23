@@ -15,20 +15,19 @@
     <VueDraggable
       v-model="localTasks"
       group="tasks"
-      item-key="id"
       class="task-list"
       ghost-class="task-ghost"
       drag-class="task-drag"
       :animation="150"
       @end="onDragEnd"
     >
-      <template #item="{ element: task }">
-        <TaskCard
-          :task="task"
-          @click="$emit('task-click', task)"
-          @delete="$emit('task-deleted', task.id, column.id)"
-        />
-      </template>
+      <TaskCard
+        v-for="task in localTasks"
+        :key="task.id"
+        :task="task"
+        @click="$emit('task-click', task)"
+        @delete="$emit('task-deleted', task.id, column.id)"
+      />
     </VueDraggable>
 
     <div class="column-footer">
