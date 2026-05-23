@@ -47,6 +47,12 @@ export interface Column {
   tasks: Task[]
 }
 
+export interface ChecklistItem {
+  id: string
+  text: string
+  done: boolean
+}
+
 export interface Task {
   id: string
   title: string
@@ -59,6 +65,7 @@ export interface Task {
   position: number
   dueDate?: string
   labels: string[]
+  checklist: ChecklistItem[]
   createdAt: string
   updatedAt: string
 }
@@ -77,6 +84,7 @@ export interface CreateTaskRequest {
   priority?: Task['priority']
   dueDate?: string
   labels?: string[]
+  checklist?: ChecklistItem[]
 }
 
 export interface UpdateTaskRequest {
@@ -88,9 +96,16 @@ export interface UpdateTaskRequest {
   position?: number
   dueDate?: string
   labels?: string[]
+  checklist?: ChecklistItem[]
 }
 
 export interface MoveTaskRequest {
   columnId: string
   position: number
+}
+
+export interface TaskFilters {
+  search: string
+  priority: string
+  assigneeId: string
 }

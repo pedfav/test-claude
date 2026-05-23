@@ -97,11 +97,14 @@ fun BoardColumn.toDto() = ColumnDto(id!!, board.id!!, name, position, color, tas
 fun Board.toDto() = BoardDto(id!!, name, description, team?.id, createdBy.toDto(), columns.map { it.toDto() }, createdAt, updatedAt)
 
 // ---- Task ----
+data class ChecklistItemDto(val id: String, val text: String, val done: Boolean)
+
 data class TaskDto(
     val id: UUID, val title: String, val description: String?,
     val boardId: UUID, val columnId: UUID, val assignee: UserDto?,
     val createdBy: UserDto, val priority: TaskPriority, val position: Int,
     val dueDate: LocalDate?, val labels: List<String>,
+    val checklist: List<ChecklistItemDto>,
     val createdAt: Instant, val updatedAt: Instant
 )
 
@@ -112,7 +115,8 @@ data class CreateTaskRequest(
     val assigneeId: UUID? = null,
     val priority: TaskPriority = TaskPriority.MEDIUM,
     val dueDate: LocalDate? = null,
-    val labels: List<String> = emptyList()
+    val labels: List<String> = emptyList(),
+    val checklist: List<ChecklistItemDto> = emptyList()
 )
 
 data class UpdateTaskRequest(
@@ -123,7 +127,8 @@ data class UpdateTaskRequest(
     val priority: TaskPriority? = null,
     val position: Int? = null,
     val dueDate: LocalDate? = null,
-    val labels: List<String>? = null
+    val labels: List<String>? = null,
+    val checklist: List<ChecklistItemDto>? = null
 )
 
 data class MoveTaskRequest(
@@ -134,5 +139,7 @@ data class MoveTaskRequest(
 fun Task.toDto() = TaskDto(
     id!!, title, description, board.id!!, column.id!!,
     assignee?.toDto(), createdBy.toDto(), priority, position,
-    dueDate, labels, createdAt, updatedAt
+    dueDate, labels,
+    checklist.map { ChecklistItemDto(it.id, it.text, it.done) },
+    createdAt, updatedAt
 )

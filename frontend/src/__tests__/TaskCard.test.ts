@@ -11,7 +11,8 @@ const mockUser = {
 const baseTask: Task = {
   id: 't1', title: 'Fix Login Bug', boardId: 'b1', columnId: 'col1',
   createdBy: mockUser, priority: 'HIGH', position: 0,
-  labels: ['bug', 'urgent'], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
+  labels: ['bug', 'urgent'], checklist: [],
+  createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
 }
 
 describe('TaskCard', () => {

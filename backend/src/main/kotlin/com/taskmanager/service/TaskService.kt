@@ -37,7 +37,8 @@ class TaskService(
         return taskRepository.save(Task(
             title = req.title, description = req.description, board = board, column = column,
             assignee = assignee, createdBy = creator, priority = req.priority,
-            position = pos, dueDate = req.dueDate, labels = req.labels
+            position = pos, dueDate = req.dueDate, labels = req.labels,
+            checklist = req.checklist.map { com.taskmanager.model.ChecklistItem(it.id, it.text, it.done) }
         )).toDto()
     }
 
@@ -50,6 +51,7 @@ class TaskService(
         req.position?.let { task.position = it }
         req.dueDate?.let { task.dueDate = it }
         req.labels?.let { task.labels = it }
+        req.checklist?.let { task.checklist = it.map { item -> com.taskmanager.model.ChecklistItem(item.id, item.text, item.done) } }
         req.columnId?.let { colId ->
             val col = columnRepository.findById(colId).orElseThrow { EntityNotFoundException("Column not found") }
             require(col.board.id?.equals(task.board.id) == true) { "Column does not belong to this board" }

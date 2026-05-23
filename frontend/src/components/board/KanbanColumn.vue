@@ -4,7 +4,7 @@
       <div class="column-title-row">
         <div class="column-dot" :style="{ background: column.color || '#94a3b8' }"></div>
         <h3>{{ column.name }}</h3>
-        <span class="task-count">{{ column.tasks.length }}</span>
+        <span class="task-count">{{ visibleCount }}</span>
       </div>
       <button class="btn btn-ghost btn-icon column-menu-btn" @click="showMenu = !showMenu">⋯</button>
       <div v-if="showMenu" class="column-menu card" v-click-outside="() => (showMenu = false)">
@@ -23,6 +23,7 @@
     >
       <TaskCard
         v-for="task in localTasks"
+        v-show="!filterFn || filterFn(task)"
         :key="task.id"
         :task="task"
         @click="$emit('task-click', task)"
@@ -37,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import TaskCard from './TaskCard.vue'
 import type { Column, Task } from '@/api/types'
@@ -45,6 +46,7 @@ import type { Column, Task } from '@/api/types'
 const props = defineProps<{
   column: Column
   boardId: string
+  filterFn?: (task: Task) => boolean
 }>()
 
 const emit = defineEmits<{
@@ -57,6 +59,10 @@ const emit = defineEmits<{
 
 const showMenu = ref(false)
 const localTasks = ref<Task[]>([...props.column.tasks])
+
+const visibleCount = computed(() =>
+  props.filterFn ? localTasks.value.filter(props.filterFn).length : localTasks.value.length
+)
 
 watch(
   () => props.column.tasks,
@@ -100,7 +106,7 @@ const vClickOutside = {
   flex-direction: column;
   background: var(--color-column-bg);
   border-radius: var(--radius-lg);
-  max-height: calc(100vh - 170px);
+  max-height: calc(100vh - 210px);
 }
 
 .column-header {
@@ -131,7 +137,6 @@ const vClickOutside = {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--color-text-secondary);
-  truncate: true;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

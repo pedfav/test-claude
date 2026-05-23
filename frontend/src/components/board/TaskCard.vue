@@ -12,12 +12,20 @@
       <div class="task-footer">
         <div class="task-meta">
           <span v-if="task.dueDate" class="due-date" :class="{ overdue: isOverdue }">
-            📅 {{ formatDate(task.dueDate) }}
+            {{ isOverdue ? '⚠' : '📅' }} {{ formatDate(task.dueDate) }}
           </span>
           <span :class="`badge badge-${task.priority.toLowerCase()}`">{{ task.priority }}</span>
         </div>
-        <div v-if="task.assignee" class="assignee avatar" :title="task.assignee.displayName">
-          {{ task.assignee.displayName.charAt(0).toUpperCase() }}
+        <div class="task-right-meta">
+          <span v-if="checklistTotal > 0" class="checklist-badge" :class="{ complete: checklistDone === checklistTotal }">
+            <svg viewBox="0 0 12 12" fill="currentColor" width="10" height="10">
+              <path d="M10 2L4.5 8 2 5.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            {{ checklistDone }}/{{ checklistTotal }}
+          </span>
+          <div v-if="task.assignee" class="assignee avatar" :title="task.assignee.displayName">
+            {{ task.assignee.displayName.charAt(0).toUpperCase() }}
+          </div>
         </div>
       </div>
     </div>
@@ -36,6 +44,9 @@ const isOverdue = computed(() => {
   return new Date(props.task.dueDate) < new Date()
 })
 
+const checklistTotal = computed(() => props.task.checklist?.length ?? 0)
+const checklistDone = computed(() => props.task.checklist?.filter((i) => i.done).length ?? 0)
+
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
@@ -46,12 +57,13 @@ function formatDate(dateStr: string) {
   padding: 0;
   overflow: hidden;
   cursor: grab;
-  transition: box-shadow 0.15s;
+  transition: box-shadow 0.15s, transform 0.1s;
   user-select: none;
 }
 
 .task-card:hover {
   box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
 .task-card:active {
@@ -119,6 +131,12 @@ function formatDate(dateStr: string) {
   flex-wrap: wrap;
 }
 
+.task-right-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .due-date {
   font-size: 11px;
   color: var(--color-text-muted);
@@ -126,7 +144,24 @@ function formatDate(dateStr: string) {
 
 .due-date.overdue {
   color: var(--color-danger);
-  font-weight: 500;
+  font-weight: 600;
+}
+
+.checklist-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: var(--color-border);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.checklist-badge.complete {
+  color: var(--color-success);
+  background: rgba(16, 185, 129, 0.1);
 }
 
 .assignee {

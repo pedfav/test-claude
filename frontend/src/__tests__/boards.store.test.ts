@@ -26,7 +26,7 @@ const mockBoard = {
 const mockTask = {
   id: 't1', title: 'Test Task', boardId: 'b1', columnId: 'col1',
   createdBy: mockUser, priority: 'MEDIUM' as const, position: 0,
-  labels: [], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
+  labels: [], checklist: [], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
 }
 
 describe('boards store', () => {

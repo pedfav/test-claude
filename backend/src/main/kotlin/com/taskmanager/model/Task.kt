@@ -1,5 +1,7 @@
 package com.taskmanager.model
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import jakarta.persistence.*
 import org.hibernate.annotations.UuidGenerator
 import java.time.Instant
@@ -7,6 +9,18 @@ import java.time.LocalDate
 import java.util.UUID
 
 enum class TaskPriority { LOW, MEDIUM, HIGH, URGENT }
+
+data class ChecklistItem(val id: String, val text: String, val done: Boolean)
+
+@Converter
+class ChecklistConverter : AttributeConverter<List<ChecklistItem>, String> {
+    private val mapper = jacksonObjectMapper()
+    override fun convertToDatabaseColumn(attr: List<ChecklistItem>?): String =
+        if (attr.isNullOrEmpty()) "[]" else mapper.writeValueAsString(attr)
+    override fun convertToEntityAttribute(data: String?): List<ChecklistItem> =
+        if (data.isNullOrBlank() || data == "[]") emptyList()
+        else try { mapper.readValue(data) } catch (e: Exception) { emptyList() }
+}
 
 @Entity
 @Table(name = "tasks")
@@ -46,6 +60,10 @@ class Task(
     @Convert(converter = StringListConverter::class)
     @Column(name = "labels")
     var labels: List<String> = emptyList(),
+
+    @Convert(converter = ChecklistConverter::class)
+    @Column(name = "checklist", nullable = false)
+    var checklist: List<ChecklistItem> = emptyList(),
 
     @Column(name = "created_at", nullable = false, updatable = false)
     val createdAt: Instant = Instant.now(),
