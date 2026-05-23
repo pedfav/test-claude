@@ -99,8 +99,8 @@ function formatDate(dateStr: string) {
 .label-chip {
   font-size: 11px;
   padding: 1px 6px;
-  background: #e0e7ff;
-  color: #4338ca;
+  background: var(--color-label-chip-bg);
+  color: var(--color-label-chip-text);
   border-radius: 3px;
   font-weight: 500;
 }

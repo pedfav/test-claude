@@ -98,7 +98,7 @@ const vClickOutside = {
   max-width: 280px;
   display: flex;
   flex-direction: column;
-  background: #f1f5f9;
+  background: var(--color-column-bg);
   border-radius: var(--radius-lg);
   max-height: calc(100vh - 170px);
 }
@@ -176,7 +176,7 @@ const vClickOutside = {
 
 .menu-item:hover { background: var(--color-border); }
 .menu-item.danger { color: var(--color-danger); }
-.menu-item.danger:hover { background: #fee2e2; }
+.menu-item.danger:hover { background: var(--color-danger-subtle); }
 
 .task-list {
   flex: 1;
