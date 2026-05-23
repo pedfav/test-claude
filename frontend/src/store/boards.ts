@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { boardsApi } from '@/api/boards'
 import { tasksApi } from '@/api/tasks'
-import type { Board, Column, Task, CreateTaskRequest, MoveTaskRequest } from '@/api/types'
+import type { Board, CreateTaskRequest, UpdateTaskRequest, MoveTaskRequest } from '@/api/types'
 
 export const useBoardStore = defineStore('boards', () => {
   const boards = ref<Board[]>([])
@@ -75,7 +75,7 @@ export const useBoardStore = defineStore('boards', () => {
     return updatedTask
   }
 
-  async function updateTask(taskId: string, data: Partial<Task>) {
+  async function updateTask(taskId: string, data: UpdateTaskRequest) {
     const updated = await tasksApi.update(taskId, data)
     if (currentBoard.value) {
       for (const col of currentBoard.value.columns) {

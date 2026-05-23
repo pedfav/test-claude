@@ -87,7 +87,7 @@ onMounted(() => boardStore.fetchBoards())
 async function handleCreate() {
   creating.value = true
   try {
-    const board = await boardStore.createBoard(newBoard.name, newBoard.description || undefined)
+    await boardStore.createBoard(newBoard.name, newBoard.description || undefined)
     showCreate.value = false
     newBoard.name = ''
     newBoard.description = ''

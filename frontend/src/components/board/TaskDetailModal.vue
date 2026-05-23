@@ -94,7 +94,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useBoardStore } from '@/store/boards'
 import { usersApi } from '@/api/users'
-import type { Board, Task, User } from '@/api/types'
+import type { Board, Task, User, UpdateTaskRequest } from '@/api/types'
 
 const props = defineProps<{ task: Task; board: Board }>()
 const emit = defineEmits<{
@@ -133,8 +133,8 @@ async function saveDesc() {
   }
 }
 
-async function updateField(field: string, value: any) {
-  const updated = await boardStore.updateTask(props.task.id, { [field]: value })
+async function updateField(field: keyof UpdateTaskRequest, value: any) {
+  const updated = await boardStore.updateTask(props.task.id, { [field]: value } as UpdateTaskRequest)
   emit('updated', updated)
 }
 

@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import TaskCard from './TaskCard.vue'
 import type { Column, Task } from '@/api/types'
@@ -88,7 +88,7 @@ const vClickOutside = {
     document.addEventListener('click', el._clickOutside)
   },
   unmounted(el: HTMLElement) {
-    document.removeEventListener('click', el._clickOutside)
+    if (el._clickOutside) document.removeEventListener('click', el._clickOutside)
   }
 }
 </script>
